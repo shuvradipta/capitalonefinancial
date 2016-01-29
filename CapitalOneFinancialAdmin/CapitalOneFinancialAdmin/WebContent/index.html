@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>CapitalOneFinancial Admin</title>
+</head>
+<body>
+<h2>CapitalOneFinancial Admin</h2>
+
+<table>
+<form method="POST" action="uploadSpreadsheetServlet.do" enctype="multipart/form-data">
+<tr>
+	<td>Upload a File<td>
+	<td><input type="file" name="uploadFilePath"></td>
+	<td><input type="submit" value="Upload File"/></td>
+</tr>
+</form>
+<form method="GET" action="writeNewClientDetailsToDB.do">
+<tr>
+	<td>Add new client(s) to database<td>
+	<td><input type="submit" value="Write new client details"/></td>
+</tr>
+</form>
+</table>
+</body>
+</html>
