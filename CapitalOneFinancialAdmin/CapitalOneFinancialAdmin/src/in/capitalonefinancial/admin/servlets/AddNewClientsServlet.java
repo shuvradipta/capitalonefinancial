@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,18 +40,20 @@ public class AddNewClientsServlet extends HttpServlet {
 		ArrayList<HashMap<String,String>> recordsToInsert = readSpreadsheet.parseSpreadhseet();
 		System.out.println("AddNewClientsServlet.doGet() - recordsToInsert :: " + recordsToInsert);
 		ArrayList<String> dbColumnOrder = new ArrayList<String>(0);
-		Set<String> keySet = recordsToInsert.get(0).keySet();
-		for (Iterator<String> iterator = keySet.iterator(); iterator.hasNext();) {
-			dbColumnOrder.add((String) iterator.next());
-		}
-		//System.out.println("AddNewClientsServlet.doGet() - dbColumnOrder :: " + dbColumnOrder);
+		dbColumnOrder = readSpreadsheet.getDBColumnOrder();
+		System.out.println("AddNewClientsServlet.doGet() - dbColumnOrder :: " + dbColumnOrder);
 		
 		InsertRecordDAO insertRecordDAO = new InsertRecordDAO(getServletContext().getResourceAsStream("/WEB-INF/credentials.txt"));
-		
+		int rowsInserted = 0;
 		for (Iterator<HashMap<String, String>> iterator = recordsToInsert.iterator(); iterator.hasNext();) {
 			HashMap<String, String> record = iterator.next();
 			//System.out.println("AddNewClientsServlet.doGet() - Now inserting record..... :: " + record);
-			insertRecordDAO.insertRecord(record, "capitalonedb.co_clientdetails", dbColumnOrder);			
+			rowsInserted = rowsInserted + insertRecordDAO.insertRecord(record, "capitalonedb.co_clientdetails", dbColumnOrder);
+		}
+		if(rowsInserted > 0){
+			response.getWriter().append("\nSuccess!! "+rowsInserted + " inserted to DB");
+		}else{
+			response.getWriter().append("\nError!! ");
 		}
 	}
 

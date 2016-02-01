@@ -19,14 +19,17 @@ public class InsertRecordDAO extends JDBCConnectorDAO {
 	}
 	
 	public int insertRecord(HashMap<String, String> record, String dbTableName, ArrayList<String> dbColumnOrder) {
+		System.out.println("InsertRecordDAO.insertRecord() - dbColumnOrder :: " + dbColumnOrder);
+		System.out.println("InsertRecordDAO.insertRecord() - record ::" + record);
 		int rowsUpdated = 0;
 		String paramQuery = "";
 		for(int i=0; i< dbColumnOrder.size(); i++) {
 			String columnName = dbColumnOrder.get(i);
 			paramQuery = paramQuery.concat("'" + record.get(columnName) + "',");
+			System.out.println("InsertRecordDAO.insertRecords() - paramQuery :: " + paramQuery);
 		}
 		paramQuery = paramQuery.substring(0, paramQuery.length()-1);
-		//System.out.println("InsertRecordDAO.insertRecords() - paramQuery :: " + paramQuery);
+		System.out.println("InsertRecordDAO.insertRecords() - paramQuery :: " + paramQuery);
 		
 		// This will load the MySQL driver, each DB has its own driver
 	    try {
@@ -46,8 +49,8 @@ public class InsertRecordDAO extends JDBCConnectorDAO {
 		    rowsUpdated = statement.executeUpdate();
 		    connect.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("InsertRecordDAO.insertRecord() - SQLException" + e.getMessage());
+			rowsUpdated = 0;
 		}
 		return rowsUpdated;
 	}

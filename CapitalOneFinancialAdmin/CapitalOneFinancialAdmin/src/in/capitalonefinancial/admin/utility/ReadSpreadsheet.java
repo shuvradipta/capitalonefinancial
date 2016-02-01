@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -41,16 +40,15 @@ public class ReadSpreadsheet {
 				for (int j=0; j<columns; j++) {
 					String cellContent = sheet.getCell(j, i).getContents();
 					cellContent = cellContent.trim();
-					if(!cellContent.isEmpty()){
+					//if(!cellContent.isEmpty()){
 						recordMap.put(dbColumnOrder.get(j), cellContent);
-					}
+					//}
 				}
 				if(!recordMap.isEmpty()){
 					records.add(recordMap);
 					System.out.println(recordMap + "added to map");
 				}
 			}
-			
 		} catch (BiffException e) {
 			System.out.println("ReadSpreadsheet.parseSpreadhseet() - BiffException :: " + e.getMessage());
 		} catch (IOException e) {
@@ -59,5 +57,21 @@ public class ReadSpreadsheet {
 		return records;
 	}
 	
+	public ArrayList<String> getDBColumnOrder(){
+		Workbook workbook = null;
+		try {
+			workbook = Workbook.getWorkbook(new File(this.filePath));
+		} catch (BiffException | IOException e) {
+			System.out.println("ReadSpreadsheet.getDBColumnOrder() - BiffException | IOException :: " + e.getMessage());
+			return null;
+		}
+		Sheet sheet = workbook.getSheet(0);// Assuming only 1 sheet
+		int columns = sheet.getColumns();
+		ArrayList<String> dbColumnOrder = new ArrayList<String>(columns); 
+		for(int i=0; i<columns; i++)
+			dbColumnOrder.add(i, sheet.getCell(i,0).getContents());
+		
+		return dbColumnOrder;
+	}
 
 }
